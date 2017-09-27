@@ -1,15 +1,15 @@
-package com.github.swanwarp.ifmoml.knn
+package com.github.swanwarp.ifmoml.knn;
 
-import com.company.math.Dot;
-import com.company.math.Minkowski;
-import javafx.util.Pair;
+import com.github.swanwarp.ifmoml.knn.math.Dot;
+import com.github.swanwarp.ifmoml.knn.math.Minkowski;
+import com.github.swanwarp.ifmoml.knn.utils.Pair;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(new File("in")));
 
         ArrayList<Pair<Dot, Integer>> data = new ArrayList<>();
@@ -30,11 +30,7 @@ public class Main {
             data.add(new Pair<>(new Dot(new Double(l[0]), new Double(l[1])), new Integer(l[2])));
         }
 
-        Pair<Dot, Integer>[] data_copy = new Pair[data.size()];
-
-        for(int i = 0; i < data.size(); i++) {
-            data_copy[i] = data.get(i);
-        }
+        ArrayList<Pair<Dot, Integer>> data_copy = new ArrayList<>(data);
 
         for(int i = 0; i < 10; i++) {
             KNN knn = new KNN(new Minkowski(), data_copy, 2);

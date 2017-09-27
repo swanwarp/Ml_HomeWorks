@@ -1,43 +1,43 @@
 package com.github.swanwarp.ifmoml.knn;
 
-import com.company.math.Dot;
-import com.company.math.Metric;
-import com.company.utils.CPair;
-import com.company.utils.Util;
-import javafx.util.Pair;
+import com.github.swanwarp.ifmoml.knn.math.Dot;
+import com.github.swanwarp.ifmoml.knn.math.Metric;
+import com.github.swanwarp.ifmoml.knn.utils.CPair;
+import com.github.swanwarp.ifmoml.knn.utils.Pair;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class KNN {
     private Metric p;
-    private Pair<Dot, Integer>[] data;
+    private ArrayList<Pair<Dot, Integer>> data;
     private int numOfClasses;
     public int k;
     private int tests = 100;
 
-    public KNN(Metric p, Pair<Dot, Integer>[] data, int numOfClasses) {
+    public KNN(Metric p, ArrayList<Pair<Dot, Integer>> data, int numOfClasses) {
         this.p = p;
         this.data = data;
         this.numOfClasses = numOfClasses;
 
-        findK((int) Math.sqrt(data.length) * 4);
+        findK((int) Math.sqrt(data.size()) * 4);
     }
 
     private void findK(int n) {
         int[][] ks = new int[n][tests];
 
         for(int i = 0; i < tests; i++) {
-            Pair<Dot, Integer>[] toRnd = Util.shuffleArray(data);
-            Pair<Dot, Integer>[] test = Arrays.copyOfRange(toRnd, 0, n),
-                    train = Arrays.copyOfRange(toRnd, n, toRnd.length);
+            ArrayList<Pair<Dot, Integer>> toRnd = new ArrayList<>(data);
+            Collections.shuffle(toRnd);
+            List<Pair<Dot, Integer>> test = toRnd.subList(0, n);
+            List<Pair<Dot, Integer>> train = toRnd.subList(n, toRnd.size());
 
             for(int j = n; j >= 1; j--) {
                 int m1 = 0;
 
                 for(Pair<Dot, Integer> p : test) {
-                    if(solve(p.getKey(), train, j) != p.getValue()) {
+                    if (solve(p.first, train, j) != p.second) {
                         m1++;
                     }
                 }
@@ -72,11 +72,11 @@ public class KNN {
         return solve(d, data, k);
     }
 
-    private int solve(Dot d, Pair<Dot, Integer>[] data, int k) {
+    private int solve(Dot d, List<Pair<Dot, Integer>> data, int k) {
         ArrayList<CPair> toSort = new ArrayList<>();
 
-        for(int i = 0; i < data.length; i++) {
-            toSort.add(new CPair(p.distance(d, data[i].getKey()), data[i].getValue()));
+        for (Pair<Dot, Integer> aData : data) {
+            toSort.add(new CPair(p.distance(d, aData.first), aData.second));
         }
 
         Collections.sort(toSort);
