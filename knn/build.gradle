@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 sourceCompatibility = 1.8
-// mainClassName = "com.github.swanwarp.ifmoml.knn.Main"
+mainClassName = "com.github.swanwarp.ifmoml.knn.Main"
 
 repositories {
     mavenCentral()
