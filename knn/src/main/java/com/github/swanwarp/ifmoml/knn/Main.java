@@ -4,9 +4,11 @@ import com.github.swanwarp.ifmoml.knn.math.Dot;
 import com.github.swanwarp.ifmoml.knn.math.Minkowski;
 import com.github.swanwarp.ifmoml.knn.utils.Pair;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -36,35 +38,6 @@ public class Main {
             KNN knn = new KNN(new Minkowski(), data_copy, 2);
 
             System.out.println(knn.k);
-        }
-    }
-
-    static class FastScanner {
-        BufferedReader br;
-        StringTokenizer st;
-
-        FastScanner(File f) {
-            try {
-                br = new BufferedReader(new FileReader(f));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        String next() {
-            while (st == null || !st.hasMoreTokens()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return st.nextToken();
-        }
-
-        int nextInt() {
-            return Integer.parseInt(next());
         }
     }
 }
