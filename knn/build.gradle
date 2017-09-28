@@ -15,5 +15,6 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
+    compile 'org.apache.xmlgraphics:batik:1.9.+'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
