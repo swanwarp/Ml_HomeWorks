@@ -24,44 +24,35 @@ public class KNN {
     }
 
     private void findK() {
-        int n = (int) Math.sqrt(data.size()) + 1;
+        int n = (int) Math.sqrt(data.size());
 
         ArrayList<int[]> kss = new ArrayList<>();
         ArrayList<Integer> ks = new ArrayList<>();
 
         for(int i = 1; i <= n; i++) {
             if(i % 2 != 0) {
-                kss.add(new int[cv]);
+                kss.add(new int[data.size()]);
                 ks.add(i);
             }
         }
 
-        for(int t = 0; t < cv; t++) {
-            List<Pair<Dot, Integer>> toRnd = new ArrayList<>(data),
-                    trains[] = new ArrayList[cv - 1];
 
-            Collections.shuffle(toRnd);
+        //List<Pair<Dot, Integer>> toRnd = new ArrayList<>(data), trains[] = new ArrayList[cv - 1];
 
-            int u = data.size()/cv;
+        //Collections.shuffle(toRnd);
+        // trains[i] = new ArrayList<>(toRnd.subList(i * u, (i + 1) * u));
 
-            for(int i = 0; i < cv - 1; i++) {
-                trains[i] = new ArrayList<>(toRnd.subList(i * u, (i + 1) * u));
-            }
+        //List<Pair<Dot, Integer>> test = toRnd.subList((cv - 1) * u, toRnd.size());
 
-            List<Pair<Dot, Integer>> test = toRnd.subList((cv - 1) * u, toRnd.size());
+        for(int i = 0; i < kss.size(); i++) {
+            for(int j = 0; j < data.size(); j++) {
+                int m1 = 0;
 
-            for(int i = 0; i < kss.size(); i++) {
-                for(int j = 0; j < trains.length; j++) {
-                    int m1 = 0;
-
-                    for(Pair<Dot, Integer> p : test) {
-                        if (solve(p.first, trains[j], ks.get(i)) != p.second) {
-                            m1++;
-                        }
-                    }
-
-                    kss.get(i)[t] += m1;
+                if (solve(data.get(j).first, data, ks.get(i)) != data.get(j).second) {
+                    m1++;
                 }
+
+                kss.get(i)[j] += m1;
             }
         }
 
@@ -76,7 +67,7 @@ public class KNN {
                 m += kss.get(i)[j];
             }
 
-            m = m/(cv*cv - cv);
+            m = m / data.size();
 
             if(m < min) {
                 min = m;
@@ -95,6 +86,9 @@ public class KNN {
         ArrayList<CPair> toSort = new ArrayList<>();
 
         for (Pair<Dot, Integer> aData : data) {
+            if(aData.first.equals(d))
+                continue;
+
             toSort.add(new CPair(p.distance(d, aData.first), aData.second));
         }
 
