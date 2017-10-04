@@ -1,7 +1,6 @@
 package com.github.swanwarp.ifmoml.knn;
 
 import com.github.swanwarp.ifmoml.knn.math.Dot;
-import com.github.swanwarp.ifmoml.knn.math.Manhattan;
 import com.github.swanwarp.ifmoml.knn.math.Metric;
 import com.github.swanwarp.ifmoml.knn.utils.CPair;
 import com.github.swanwarp.ifmoml.knn.utils.Pair;
@@ -111,7 +110,7 @@ public class KNN {
                 p_fin[i] += ps[i][j];
             }
 
-            p_fin[i] = p_fin[i] / (cv * cv);
+            p_fin[i] = p_fin[i] / cv;
         }
 
         double max = 0;
@@ -161,38 +160,27 @@ public class KNN {
 
         for(int t = 0; t < cv; t++) {
             Collections.shuffle(toRnd);
-            ArrayList<ArrayList<Pair<Dot, Integer>>> folds = new ArrayList<>();
-
-            for(int i = 0; i < cv; i++) {
-                folds.add(new ArrayList<>(toRnd.subList(u * i, u * (i + 1) < toRnd.size() ? u * (i + 1) : toRnd.size())));
-            }
 
             for(int o = 0; o < max_length; o++) {
                 double tp = 0,
                         fp = 0,
                         fn = 0;
 
-                for(int i = 0; i < folds.size(); i++) {
-                    for(int j = 0; j < folds.size(); j++) {
-                        if(j != i) {
+                for(int i = 0; i < toRnd.size(); i++) {
+                    ArrayList<Pair<Dot, Integer>> test = new ArrayList<>(toRnd);
+                    test.remove(i);
 
-                            ArrayList<Pair<Dot, Integer>> test = folds.get(i);
+                    int res = solve(toRnd.get(i).first, test, ks[o], p);
 
-                            for(int k = 0; k < test.size(); k++) {
-                                int res = solve(test.get(k).first, folds.get(j), ks[o], p);
-
-                                if(res == test.get(k).second) {
-                                    if(res == 1) {
-                                        tp++;
-                                    }
-                                } else {
-                                    if(res == 1) {
-                                        fp++;
-                                    } else {
-                                        fn++;
-                                    }
-                                }
-                            }
+                    if(res == toRnd.get(i).second) {
+                        if(res == 1) {
+                            tp++;
+                        }
+                    } else {
+                        if(res == 1) {
+                            fp++;
+                        } else {
+                            fn++;
                         }
                     }
                 }
@@ -222,10 +210,10 @@ public class KNN {
 
         double max = 0;
 
-        System.out.println(p.getClass().getSimpleName() + ":");
+        //System.out.println(p.getClass().getSimpleName() + ":");
 
         for(int i = 0; i < max_length; i++) {
-            System.out.print(k_fin[i] + " ");
+            //System.out.print(k_fin[i] + " ");
 
             if(k_fin[i] >= max) {
                 max = k_fin[i];
@@ -233,7 +221,7 @@ public class KNN {
             }
         }
 
-        System.out.println();
+        //System.out.println();
 
         return k;
     }
